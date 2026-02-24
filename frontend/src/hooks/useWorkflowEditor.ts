@@ -11,6 +11,8 @@ import { useReducer, useCallback, useMemo } from 'react';
 import type { EditorNode, EditorConnection, WorkflowNodeType, ValidationError } from '../types/workflow';
 import { NODE_TYPE_CATALOG } from '../types/workflow';
 import { isValidConnection, validateWorkflow } from '../utils/workflowValidation';
+import type { WorkflowTemplate } from '../types/workflowTemplates';
+import { instantiateTemplateNodes, instantiateTemplateConnections } from '../types/workflowTemplates';
 
 // ============================================================================
 // State
@@ -52,7 +54,8 @@ type WorkflowAction =
   | { type: 'DELETE_CONNECTION'; payload: { connectionId: string } }
   | { type: 'START_CONNECTION'; payload: { sourceNodeId: string; sourcePort: string } }
   | { type: 'CANCEL_CONNECTION' }
-  | { type: 'CLEAR_ALL' };
+  | { type: 'CLEAR_ALL' }
+  | { type: 'LOAD_TEMPLATE'; payload: { template: WorkflowTemplate } };
 
 // ============================================================================
 // Reducer
@@ -182,6 +185,19 @@ function workflowReducer(state: WorkflowEditorState, action: WorkflowAction): Wo
       break;
     }
 
+    case 'LOAD_TEMPLATE': {
+      const { template } = action.payload;
+      const { nodes: newNodes, idMap } = instantiateTemplateNodes(template);
+      const newConnections = instantiateTemplateConnections(template, idMap);
+      newState = {
+        ...initialState,
+        nodes: newNodes,
+        connections: newConnections,
+        nextId: newNodes.length + newConnections.length + 1,
+      };
+      break;
+    }
+
     default:
       return state;
   }
@@ -279,6 +295,13 @@ export function useWorkflowEditor() {
     dispatch({ type: 'CLEAR_ALL' });
   }, []);
 
+  const loadTemplate = useCallback(
+    (template: WorkflowTemplate) => {
+      dispatch({ type: 'LOAD_TEMPLATE', payload: { template } });
+    },
+    [],
+  );
+
   // ---- Derived state ----
 
   const selectedNode = useMemo(
@@ -335,5 +358,6 @@ export function useWorkflowEditor() {
 
     // Workflow actions
     clearAll,
+    loadTemplate,
   };
 }

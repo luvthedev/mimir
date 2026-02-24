@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "summary": "Defined workflow schema and persistence layer for visual editor state. Created TypeScript interfaces (WorkflowNode, WorkflowConnection, Workflow, plus input types) in src/types/workflow.ts. Added Neo4j database schema with dedicated labels (Workflow, WorkflowNode, WorkflowConnection), unique ID constraints, userId index, and composite indexes for query performance. Implemented WorkflowPersistenceService with async CRUD methods (createWorkflow, getWorkflowById, listWorkflows, updateWorkflow, deleteWorkflow) using the existing GraphManager/driver.session() pattern.",
+  "files_changed": [
+    "src/types/workflow.ts",
+    "src/types/index.ts",
+    "src/managers/GraphManager.ts",
+    "src/managers/WorkflowPersistenceService.ts",
+    "src/managers/index.ts"
+  ]
+}

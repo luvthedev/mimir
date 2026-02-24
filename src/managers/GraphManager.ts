@@ -352,6 +352,46 @@ export class GraphManager implements IGraphManager {
         }}
       `);
 
+      // ─────────────────────────────────────────────────────────────
+      // Workflow Editor Schema
+      // ─────────────────────────────────────────────────────────────
+
+      // Workflow unique ID constraint
+      await session.run(`
+        CREATE CONSTRAINT workflow_id_unique IF NOT EXISTS
+        FOR (w:Workflow) REQUIRE w.id IS UNIQUE
+      `);
+
+      // WorkflowNode unique ID constraint
+      await session.run(`
+        CREATE CONSTRAINT workflow_node_id_unique IF NOT EXISTS
+        FOR (wn:WorkflowNode) REQUIRE wn.id IS UNIQUE
+      `);
+
+      // WorkflowConnection unique ID constraint
+      await session.run(`
+        CREATE CONSTRAINT workflow_connection_id_unique IF NOT EXISTS
+        FOR (wc:WorkflowConnection) REQUIRE wc.id IS UNIQUE
+      `);
+
+      // Index on workflow userId for fast lookups by owner
+      await session.run(`
+        CREATE INDEX workflow_userId IF NOT EXISTS
+        FOR (w:Workflow) ON (w.userId)
+      `);
+
+      // Composite index on WorkflowNode (workflowId, nodeType) for query performance
+      await session.run(`
+        CREATE INDEX workflow_node_type IF NOT EXISTS
+        FOR (wn:WorkflowNode) ON (wn.workflowId, wn.nodeType)
+      `);
+
+      // Composite index on WorkflowConnection (workflowId, sourceNodeId, targetNodeId) for query performance
+      await session.run(`
+        CREATE INDEX workflow_connection_endpoints IF NOT EXISTS
+        FOR (wc:WorkflowConnection) ON (wc.workflowId, wc.sourceNodeId, wc.targetNodeId)
+      `);
+
       // Migration: Add Node label to existing File nodes and set type property
       await session.run(`
         MATCH (f:File)
@@ -359,7 +399,7 @@ export class GraphManager implements IGraphManager {
         SET f:Node, f.type = 'file'
       `);
 
-      console.log('✅ Neo4j schema initialized (with file indexing support)');
+      console.log('✅ Neo4j schema initialized (with file indexing and workflow support)');
     } catch (error: any) {
       console.error('❌ Schema initialization failed:', error.message);
       throw error;

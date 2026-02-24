@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "summary": "Created workflow schema and persistence layer: TypeScript interfaces (WorkflowNode, WorkflowConnection, Workflow with input/update variants) in src/types/workflow.ts, WorkflowPersistenceService with full CRUD (createWorkflow, getWorkflowById, listWorkflows, updateWorkflow, deleteWorkflow, hardDeleteWorkflow) in src/managers/WorkflowPersistenceService.ts, Neo4j schema initialization with unique constraints and composite indexes for query performance, and exported all new types and service from index files.",
+  "files_changed": [
+    "src/types/workflow.ts",
+    "src/types/index.ts",
+    "src/managers/WorkflowPersistenceService.ts",
+    "src/managers/index.ts"
+  ]
+}

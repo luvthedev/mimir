@@ -2,6 +2,23 @@ import { create } from 'zustand';
 import { Task, ProjectPlan, ParallelGroup, AgentTemplate, CreateAgentRequest, TaskExecutionStatus, Lambda, TransformerTask, isAgentTask, isTransformerTask } from '../types/task';
 import { apiClient, ApiError } from '../utils/api';
 
+// ============================================================================
+// Export History Types
+// ============================================================================
+
+export interface ExportHistoryEntry {
+  /** Timestamp of the export */
+  timestamp: string;
+  /** Export format used */
+  format: 'file' | 'package' | 'gist';
+  /** Filename of the exported file */
+  filename: string;
+  /** Whether the export was successful */
+  success: boolean;
+  /** URL of the gist (for gist format) */
+  gistUrl?: string;
+}
+
 // SessionStorage keys
 const STORAGE_KEYS = {
   WORKFLOW_STATE: 'mimir-workflow-state',
@@ -16,6 +33,7 @@ interface PersistedWorkflowState {
   parallelGroups: ParallelGroup[];
   agentTemplates: AgentTemplate[];
   lambdas: Lambda[];
+  exportHistory: ExportHistoryEntry[];
 }
 
 // Persistable execution state
@@ -42,7 +60,8 @@ interface PlanState {
   selectedLambda: Lambda | null;
   agentOperations: Record<string, boolean>; // Track loading states by agent ID
   globalError: ApiError | null; // Global error state
-  
+  exportHistory: ExportHistoryEntry[]; // Export audit trail
+
   // Execution tracking
   activeExecutionId: string | null;
   isExecuting: boolean;
@@ -77,6 +96,10 @@ interface PlanState {
   setAgentSearch: (search: string) => void;
   setSelectedAgent: (agent: AgentTemplate | null) => void;
   
+  // Export history
+  addExportRecord: (entry: ExportHistoryEntry) => void;
+  clearExportHistory: () => void;
+
   // Lambda management
   addLambda: (lambda: Lambda) => void;
   updateLambda: (lambdaId: string, updates: Partial<Lambda>) => void;
@@ -247,7 +270,8 @@ export const usePlanStore = create<PlanState>((set, get) => {
   selectedLambda: null,
   agentOperations: {},
   globalError: null,
-  
+  exportHistory: [],
+
   // Execution tracking
   activeExecutionId: null,
   isExecuting: false,
@@ -718,7 +742,14 @@ export const usePlanStore = create<PlanState>((set, get) => {
   })),
   
   setSelectedAgent: (agent) => set({ selectedAgent: agent }),
-  
+
+  // Export history
+  addExportRecord: (entry) => set((state) => ({
+    exportHistory: [...state.exportHistory, entry],
+  })),
+
+  clearExportHistory: () => set({ exportHistory: [] }),
+
   // Lambda management
   addLambda: (lambda) => set((state) => ({
     lambdas: [...state.lambdas, lambda],
@@ -795,6 +826,7 @@ export const usePlanStore = create<PlanState>((set, get) => {
       parallelGroups: state.parallelGroups,
       agentTemplates: state.agentTemplates,
       lambdas: state.lambdas,
+      exportHistory: state.exportHistory,
     };
     sessionStorage.setItem(STORAGE_KEYS.WORKFLOW_STATE, JSON.stringify(workflowState));
     
@@ -834,12 +866,13 @@ export const usePlanStore = create<PlanState>((set, get) => {
           projectPlan: workflowState.projectPlan,
           tasks: workflowState.tasks,
           parallelGroups: workflowState.parallelGroups,
-          agentTemplates: workflowState.agentTemplates.length > 0 
-            ? workflowState.agentTemplates 
+          agentTemplates: workflowState.agentTemplates.length > 0
+            ? workflowState.agentTemplates
             : get().agentTemplates, // Keep defaults if empty
           lambdas: workflowState.lambdas?.length > 0
             ? workflowState.lambdas
             : get().lambdas, // Keep defaults if empty
+          exportHistory: workflowState.exportHistory || [],
         });
       }
       

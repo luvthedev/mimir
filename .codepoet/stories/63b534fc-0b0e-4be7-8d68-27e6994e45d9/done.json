@@ -1,0 +1,55 @@
+{
+  "story_id": "63b534fc-0b0e-4be7-8d68-27e6994e45d9",
+  "completed_at": "2026-02-24T09:55:00Z",
+  "status": "completed",
+  "summary": "Implemented Export Code dialog with multi-format export capabilities for generated workflow code",
+  "changes": [
+    {
+      "file": "frontend/src/services/packageTemplates.ts",
+      "action": "created",
+      "description": "Template generators for npm package scaffolding: generatePackageJson, generateTsConfig, generateReadme, generateTestScaffold, sanitizePackageName"
+    },
+    {
+      "file": "frontend/src/services/codeExporter.ts",
+      "action": "created",
+      "description": "Code export service with exportAsFile (single .ts download), exportAsPackage (ZIP with full npm project), exportAsGist (GitHub API), validateForExport, extractDependencies, createZipBlob"
+    },
+    {
+      "file": "frontend/src/components/ExportDialog.tsx",
+      "action": "created",
+      "description": "Modal dialog component with format selection (file/package/gist), validation display, export options (dependencies, tests, package name, GitHub token), and result feedback"
+    },
+    {
+      "file": "frontend/src/store/planStore.ts",
+      "action": "modified",
+      "description": "Added ExportHistoryEntry type, exportHistory state array, addExportRecord and clearExportHistory actions, sessionStorage persistence for export history"
+    },
+    {
+      "file": "frontend/src/components/TaskCanvas.tsx",
+      "action": "modified",
+      "description": "Added 'Code' export button with code generation (API with fallback), ExportDialog integration, and export history tracking via onExportComplete callback"
+    },
+    {
+      "file": "frontend/src/services/__tests__/packageTemplates.test.ts",
+      "action": "created",
+      "description": "34 tests covering generatePackageJson, generateTsConfig, generateReadme, generateTestScaffold, sanitizePackageName"
+    },
+    {
+      "file": "frontend/src/services/__tests__/codeExporter.test.ts",
+      "action": "created",
+      "description": "30 tests covering validateForExport, extractDependencies, generateFilename, exportAsFile, exportAsPackage, exportAsGist, createZipBlob"
+    },
+    {
+      "file": "frontend/src/components/__tests__/ExportDialog.test.tsx",
+      "action": "created",
+      "description": "21 tests covering rendering, validation, format selection, close behavior, export action, and options checkboxes"
+    }
+  ],
+  "test_results": {
+    "total": 172,
+    "passed": 171,
+    "failed": 1,
+    "failed_tests_preexisting": true,
+    "note": "The single failure (planStore createAgent worker test) is pre-existing and unrelated to this change"
+  }
+}

@@ -26,9 +26,10 @@
 import { GraphManager } from './GraphManager.js';
 import { TodoManager } from './TodoManager.js';
 import { UnifiedSearchService } from './UnifiedSearchService.js';
+import { WorkflowPersistenceService } from './WorkflowPersistenceService.js';
 import type { IGraphManager } from '../types/index.js';
 
-export { GraphManager, TodoManager, UnifiedSearchService };
+export { GraphManager, TodoManager, UnifiedSearchService, WorkflowPersistenceService };
 export type { IGraphManager };
 
 /**
@@ -94,4 +95,31 @@ export async function createGraphManager(): Promise<GraphManager> {
  */
 export function createTodoManager(graphManager: IGraphManager): TodoManager {
   return new TodoManager(graphManager);
+}
+
+/**
+ * Create a WorkflowPersistenceService instance
+ *
+ * Optionally initializes the workflow schema (indexes and constraints).
+ * Requires an initialized GraphManager.
+ *
+ * @param graphManager - An initialized IGraphManager instance
+ * @param initSchema - If true, initializes workflow indexes/constraints (default: true)
+ * @returns Initialized WorkflowPersistenceService
+ *
+ * @example
+ * ```typescript
+ * const graphManager = await createGraphManager();
+ * const workflowService = await createWorkflowPersistenceService(graphManager);
+ * ```
+ */
+export async function createWorkflowPersistenceService(
+  graphManager: IGraphManager,
+  initSchema: boolean = true
+): Promise<WorkflowPersistenceService> {
+  const service = new WorkflowPersistenceService(graphManager);
+  if (initSchema) {
+    await service.initializeSchema();
+  }
+  return service;
 }

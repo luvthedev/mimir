@@ -359,7 +359,47 @@ export class GraphManager implements IGraphManager {
         SET f:Node, f.type = 'file'
       `);
 
-      console.log('✅ Neo4j schema initialized (with file indexing support)');
+      // ─────────────────────────────────────────────────────────────
+      // Workflow Schema (Visual Editor State)
+      // ─────────────────────────────────────────────────────────────
+
+      // Workflow unique ID constraint
+      await session.run(`
+        CREATE CONSTRAINT workflow_id_unique IF NOT EXISTS
+        FOR (w:Workflow) REQUIRE w.id IS UNIQUE
+      `);
+
+      // Workflow userId index for fast lookup by owner
+      await session.run(`
+        CREATE INDEX workflow_userId IF NOT EXISTS
+        FOR (w:Workflow) ON (w.userId)
+      `);
+
+      // WorkflowNode unique ID constraint
+      await session.run(`
+        CREATE CONSTRAINT workflow_node_id_unique IF NOT EXISTS
+        FOR (wn:WorkflowNode) REQUIRE wn.id IS UNIQUE
+      `);
+
+      // Composite index on WorkflowNode (workflowId, nodeType) for query performance
+      await session.run(`
+        CREATE INDEX workflow_node_type IF NOT EXISTS
+        FOR (wn:WorkflowNode) ON (wn.workflowId, wn.nodeType)
+      `);
+
+      // WorkflowConnection unique ID constraint
+      await session.run(`
+        CREATE CONSTRAINT workflow_connection_id_unique IF NOT EXISTS
+        FOR (wc:WorkflowConnection) REQUIRE wc.id IS UNIQUE
+      `);
+
+      // Composite index on WorkflowConnection (workflowId, sourceNodeId, targetNodeId) for query performance
+      await session.run(`
+        CREATE INDEX workflow_connection_endpoints IF NOT EXISTS
+        FOR (wc:WorkflowConnection) ON (wc.workflowId, wc.sourceNodeId, wc.targetNodeId)
+      `);
+
+      console.log('✅ Neo4j schema initialized (with file indexing and workflow support)');
     } catch (error: any) {
       console.error('❌ Schema initialization failed:', error.message);
       throw error;

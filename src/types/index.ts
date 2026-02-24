@@ -80,6 +80,17 @@ export {
 // Graph manager interface
 export type { IGraphManager } from './IGraphManager.js';
 
+// Workflow types
+export type {
+  WorkflowNodeType,
+  NodePosition,
+  WorkflowNode,
+  WorkflowConnection,
+  Workflow,
+  CreateWorkflowInput,
+  UpdateWorkflowInput
+} from './workflow.js';
+
 // Watch config types
 export type {
   WatchConfig,

@@ -71,6 +71,9 @@ export type NodeType =
   | 'chain_execution'   // Agent chain execution tracking
   | 'agent_step'        // Individual agent step within chain
   | 'failure_pattern'   // Failed execution patterns for learning
+  | 'workflow'          // Visual workflow definitions
+  | 'workflow_node'     // Individual nodes within a workflow
+  | 'workflow_connection' // Connections between workflow nodes
   | 'custom';           // User-defined types
 
 // Special type for clear() function - includes all node types plus "ALL"
@@ -109,7 +112,9 @@ export type EdgeType =
   | 'references'   // Generic reference
   | 'belongs_to'   // Step belongs to execution
   | 'follows'      // Step follows previous step
-  | 'occurred_in'; // Failure occurred in execution
+  | 'occurred_in'  // Failure occurred in execution
+  | 'has_node'     // Workflow has a workflow node
+  | 'connects_to'; // Workflow connection between workflow nodes
 
 /**
  * Unified Node structure

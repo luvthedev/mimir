@@ -359,7 +359,23 @@ export class GraphManager implements IGraphManager {
         SET f:Node, f.type = 'file'
       `);
 
-      console.log('✅ Neo4j schema initialized (with file indexing support)');
+      // ─────────────────────────────────────────────────────────────
+      // Workflow Schema Indexes
+      // ─────────────────────────────────────────────────────────────
+
+      // Composite index on workflow nodes for fast lookup by workflow + node type
+      await session.run(`
+        CREATE INDEX workflow_node_lookup IF NOT EXISTS
+        FOR (n:Node) ON (n.type, n.nodeType)
+      `);
+
+      // Index on userId for workflow listing queries
+      await session.run(`
+        CREATE INDEX workflow_user_lookup IF NOT EXISTS
+        FOR (n:Node) ON (n.userId)
+      `);
+
+      console.log('✅ Neo4j schema initialized (with file indexing + workflow support)');
     } catch (error: any) {
       console.error('❌ Schema initialization failed:', error.message);
       throw error;

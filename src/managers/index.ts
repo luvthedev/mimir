@@ -26,9 +26,10 @@
 import { GraphManager } from './GraphManager.js';
 import { TodoManager } from './TodoManager.js';
 import { UnifiedSearchService } from './UnifiedSearchService.js';
+import { WorkflowPersistenceService } from './WorkflowPersistenceService.js';
 import type { IGraphManager } from '../types/index.js';
 
-export { GraphManager, TodoManager, UnifiedSearchService };
+export { GraphManager, TodoManager, UnifiedSearchService, WorkflowPersistenceService };
 export type { IGraphManager };
 
 /**
@@ -94,4 +95,33 @@ export async function createGraphManager(): Promise<GraphManager> {
  */
 export function createTodoManager(graphManager: IGraphManager): TodoManager {
   return new TodoManager(graphManager);
+}
+
+/**
+ * Create and initialize a WorkflowPersistenceService instance
+ *
+ * Creates the service and runs idempotent schema initialization
+ * (constraints + indexes) for workflow, workflow_node, and
+ * workflow_connection labels in Neo4j.
+ *
+ * @param graphManager - An initialized GraphManager instance
+ * @returns Promise resolving to an initialized WorkflowPersistenceService
+ *
+ * @example
+ * ```typescript
+ * const graphManager = await createGraphManager();
+ * const workflowService = await createWorkflowPersistenceService(graphManager);
+ *
+ * const workflow = await workflowService.createWorkflow({
+ *   name: 'My Pipeline',
+ *   userId: 'user-123'
+ * });
+ * ```
+ */
+export async function createWorkflowPersistenceService(
+  graphManager: IGraphManager
+): Promise<WorkflowPersistenceService> {
+  const service = new WorkflowPersistenceService(graphManager);
+  await service.initialize();
+  return service;
 }

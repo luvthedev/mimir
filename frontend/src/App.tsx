@@ -3,6 +3,7 @@ import { Portal } from './pages/Portal';
 import { Studio } from './pages/Studio';
 import { Login } from './pages/Login';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { WorkflowEditor } from './components/workflow/WorkflowEditor';
 
 function App() {
   return (
@@ -25,6 +26,13 @@ function App() {
         <Route path="/studio" element={
           <ProtectedRoute>
             <Studio />
+          </ProtectedRoute>
+        } />
+
+        {/* Visual workflow editor - protected */}
+        <Route path="/workflow-editor" element={
+          <ProtectedRoute>
+            <WorkflowEditor />
           </ProtectedRoute>
         } />
         

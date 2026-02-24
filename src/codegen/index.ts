@@ -39,3 +39,20 @@ export {
   generateHeader,
 } from './codeFormatting.js';
 export type { ParsedImport } from './codeFormatting.js';
+export { CodeExporter } from './CodeExporter.js';
+export type {
+  ExportFormat,
+  ExportOptions,
+  FileExportResult,
+  PackageFile,
+  PackageExportResult,
+  GistExportResult,
+  ExportHistoryEntry,
+} from './CodeExporter.js';
+export {
+  generatePackageJson,
+  generateTsConfig,
+  generateReadme,
+  generateTestScaffold,
+} from './packageTemplates.js';
+export type { PackageTemplateOptions } from './packageTemplates.js';

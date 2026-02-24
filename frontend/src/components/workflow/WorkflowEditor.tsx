@@ -11,12 +11,13 @@
  * actions down to child components.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, CheckCircle, Trash2, ArrowLeft } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Trash2, ArrowLeft, Download } from 'lucide-react';
 import { useWorkflowEditor } from '../../hooks/useWorkflowEditor';
 import { NodePalette } from './NodePalette';
 import { Canvas } from './Canvas';
+import { ExportDialog } from './ExportDialog';
 import { isValidConnection } from '../../utils/workflowValidation';
 import { NODE_TYPE_CATALOG } from '../../types/workflow';
 import type { EditorNode } from '../../types/workflow';
@@ -196,6 +197,7 @@ function NodeConfigPanel({
 
 export function WorkflowEditor() {
   const navigate = useNavigate();
+  const [showExportDialog, setShowExportDialog] = useState(false);
   const {
     nodes,
     connections,
@@ -295,6 +297,19 @@ export function WorkflowEditor() {
             </div>
           )}
 
+          {/* Export */}
+          {nodes.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowExportDialog(true)}
+              className="flex items-center space-x-1 px-3 py-1.5 bg-valhalla-gold/10 hover:bg-valhalla-gold/20 border border-valhalla-gold/30 hover:border-valhalla-gold/50 rounded-lg text-valhalla-gold transition-all text-xs"
+              title="Export generated code"
+            >
+              <Download size={12} />
+              <span>Export</span>
+            </button>
+          )}
+
           {/* Clear all */}
           {nodes.length > 0 && (
             <button
@@ -371,6 +386,17 @@ export function WorkflowEditor() {
           </div>
         </div>
       )}
+
+      {/* Export Dialog */}
+      <ExportDialog
+        isOpen={showExportDialog}
+        onClose={() => setShowExportDialog(false)}
+        nodes={nodes}
+        connections={connections}
+        workflowName="Untitled Workflow"
+        isValid={isValid}
+        validationErrors={errorMessages}
+      />
     </div>
   );
 }

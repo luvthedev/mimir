@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import { usePlanStore } from '../store/planStore';
+import type { ExportHistoryEntry } from '../store/planStore';
 import { AgentTemplate, AgentTask, Lambda, TransformerTask } from '../types/task';
 import { WorkflowGraph } from './WorkflowGraph';
-import { Download, Play, ListPlus, FileDown, XCircle, ArrowRightLeft, Upload } from 'lucide-react';
+import { Download, Play, ListPlus, FileDown, XCircle, ArrowRightLeft, Upload, Code } from 'lucide-react';
 import { ImportWorkflowModal } from './ImportWorkflowModal';
+import { ExportDialog } from './ExportDialog';
+import type { ExportResult } from '../services/codeExporter';
 
 // Wrapper to catch agent/lambda drops in graph view
 function GraphDropWrapper({ isExecuting }: { isExecuting: boolean }) {
@@ -81,6 +84,11 @@ export function TaskCanvas() {
   const [completedExecutionId, setCompletedExecutionId] = useState<string | null>(null);
   const [deliverables, setDeliverables] = useState<Array<{ filename: string; size: number; mimeType: string }>>([]);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [generatedCode, setGeneratedCode] = useState<string>('');
+  const [isGeneratingCode, setIsGeneratingCode] = useState(false);
+
+  const { addExportRecord } = usePlanStore();
   
   // Reconnect to SSE on mount if there's an active execution
   useEffect(() => {
@@ -111,6 +119,142 @@ export function TaskCanvas() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+
+  // Generate code and open export dialog
+  const handleExportCode = useCallback(async () => {
+    if (tasks.length === 0) return;
+
+    setIsGeneratingCode(true);
+    try {
+      const response = await fetch('/api/workflows/generate-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          tasks,
+          parallelGroups,
+          projectPlan,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.code) {
+          setGeneratedCode(result.code);
+          setIsExportDialogOpen(true);
+        } else {
+          // If backend doesn't return code, generate a placeholder
+          // that includes the workflow structure
+          const placeholder = generateFallbackCode();
+          setGeneratedCode(placeholder);
+          setIsExportDialogOpen(true);
+        }
+      } else {
+        // Fall back to client-side code representation
+        const fallback = generateFallbackCode();
+        setGeneratedCode(fallback);
+        setIsExportDialogOpen(true);
+      }
+    } catch {
+      // Generate a fallback representation if API is unavailable
+      const fallback = generateFallbackCode();
+      setGeneratedCode(fallback);
+      setIsExportDialogOpen(true);
+    } finally {
+      setIsGeneratingCode(false);
+    }
+  }, [tasks, parallelGroups, projectPlan]);
+
+  // Generate fallback code when the API endpoint is not available
+  const generateFallbackCode = useCallback((): string => {
+    const timestamp = new Date().toISOString();
+    const workflowName = projectPlan?.overview?.goal || 'Workflow';
+    const safeName = workflowName
+      .replace(/[^a-zA-Z0-9\s]/g, '')
+      .split(/\s+/)
+      .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join('');
+
+    const taskSetup = tasks.map((task, i) => {
+      if (task.taskType === 'transformer') {
+        return `  // Step ${i + 1}: ${task.title} (Transformer)
+  console.log('Running transformer: ${task.title}');
+  // Lambda: ${task.lambdaName || 'pass-through'}
+  const step${i + 1}Result = await transformStep('${task.id}', ${i > 0 ? `step${i}Result` : "''"});`;
+      }
+      return `  // Step ${i + 1}: ${task.title} (Agent)
+  console.log('Running agent task: ${task.title}');
+  const step${i + 1}Result = await executeAgentTask({
+    id: '${task.id}',
+    title: '${task.title}',
+    prompt: ${JSON.stringify(task.taskType === 'agent' ? task.prompt : '')},
+    dependencies: ${JSON.stringify(task.dependencies)},
+  });`;
+    }).join('\n\n');
+
+    return `/**
+ * AUTO-GENERATED CODE - DO NOT EDIT MANUALLY
+ *
+ * Generated from workflow: ${workflowName}
+ * Generated at: ${timestamp}
+ * Tasks: ${tasks.length}
+ *
+ * WARNING: Manual edits to this file will break visual editor sync.
+ * Edit the workflow in the visual editor and regenerate instead.
+ */
+
+import { ChatOpenAI } from '@langchain/openai';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
+import { StringOutputParser } from '@langchain/core/output_parsers';
+
+// ============================================================================
+// Workflow: ${workflowName}
+// ============================================================================
+
+async function executeAgentTask(task: { id: string; title: string; prompt: string; dependencies: string[] }): Promise<string> {
+  const model = new ChatOpenAI({ modelName: 'gpt-4', temperature: 0 });
+  const prompt = ChatPromptTemplate.fromMessages([
+    ['system', 'You are an expert assistant.'],
+    ['human', task.prompt || 'Complete the task: {title}'],
+  ]);
+  const chain = prompt.pipe(model).pipe(new StringOutputParser());
+  return await chain.invoke({ title: task.title });
+}
+
+async function transformStep(id: string, input: string): Promise<string> {
+  console.log(\`[Transform \${id}] Processing...\`);
+  return input;
+}
+
+export async function execute${safeName}Workflow(): Promise<any> {
+  console.log('Starting workflow: ${workflowName}');
+  const startTime = Date.now();
+
+${taskSetup}
+
+  const durationMs = Date.now() - startTime;
+  console.log(\`Workflow completed in \${durationMs}ms\`);
+  return step${tasks.length}Result;
+}
+
+// Run if executed directly
+execute${safeName}Workflow()
+  .then(result => console.log('Result:', result))
+  .catch(error => console.error('Workflow failed:', error));
+`;
+  }, [tasks, projectPlan]);
+
+  // Handle export completion for history tracking
+  const handleExportComplete = useCallback((result: ExportResult) => {
+    const entry: ExportHistoryEntry = {
+      timestamp: result.timestamp,
+      format: result.format,
+      filename: result.filename,
+      success: result.success,
+      gistUrl: result.gistUrl,
+    };
+    addExportRecord(entry);
+  }, [addExportRecord]);
 
   // SSE connection for real-time execution updates
   useEffect(() => {
@@ -472,6 +616,20 @@ export function TaskCanvas() {
             <Download className="w-4 h-4" />
             <span>Export</span>
           </button>
+          <button
+            type="button"
+            onClick={handleExportCode}
+            disabled={tasks.length === 0 || isGeneratingCode}
+            className="px-3 py-1.5 bg-frost-ice/20 border border-frost-ice/40 text-frost-ice rounded-lg hover:bg-frost-ice/30 hover:text-white flex items-center space-x-1.5 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Export generated TypeScript code"
+          >
+            {isGeneratingCode ? (
+              <div className="animate-spin h-4 w-4 border-2 border-frost-ice border-t-transparent rounded-full" />
+            ) : (
+              <Code className="w-4 h-4" />
+            )}
+            <span>Code</span>
+          </button>
         </div>
       </div>
 
@@ -506,6 +664,18 @@ export function TaskCanvas() {
       <ImportWorkflowModal
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
+      />
+
+      {/* Export Code Dialog */}
+      <ExportDialog
+        isOpen={isExportDialogOpen}
+        onClose={() => setIsExportDialogOpen(false)}
+        code={generatedCode}
+        workflowName={projectPlan?.overview?.goal || 'Workflow'}
+        workflowDescription={projectPlan?.overview?.goal || 'Generated LangChain workflow'}
+        nodeTypes={tasks.map(t => t.taskType)}
+        nodeCount={tasks.length}
+        onExportComplete={handleExportComplete}
       />
     </div>
   );

@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "summary": "Defined workflow schema and persistence layer for visual editor state. Created TypeScript interfaces (WorkflowNode, WorkflowConnection, Workflow, CreateWorkflowInput, UpdateWorkflowInput) in src/types/workflow.ts. Implemented WorkflowPersistenceService with createWorkflow, getWorkflowById, listWorkflows, updateWorkflow, and deleteWorkflow methods using Neo4j transactions. Added idempotent schema initialization with unique constraints and composite indexes on (workflowId, nodeType) and (workflowId, sourceNodeId, targetNodeId) for query performance. Exported all types and the service from the appropriate index modules.",
+  "files_changed": [
+    "src/types/workflow.ts",
+    "src/types/index.ts",
+    "src/managers/WorkflowPersistenceService.ts",
+    "src/managers/index.ts"
+  ]
+}

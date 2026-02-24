@@ -8,6 +8,7 @@
  * - **GraphManager**: Core CRUD operations, search, locking, transactions
  * - **TodoManager**: TODO and TODO list management
  * - **UnifiedSearchService**: Hybrid search (vector + BM25)
+ * - **WorkflowPersistenceService**: Visual workflow editor CRUD operations
  * 
  * @example
  * ```typescript
@@ -26,9 +27,10 @@
 import { GraphManager } from './GraphManager.js';
 import { TodoManager } from './TodoManager.js';
 import { UnifiedSearchService } from './UnifiedSearchService.js';
+import { WorkflowPersistenceService } from './WorkflowPersistenceService.js';
 import type { IGraphManager } from '../types/index.js';
 
-export { GraphManager, TodoManager, UnifiedSearchService };
+export { GraphManager, TodoManager, UnifiedSearchService, WorkflowPersistenceService };
 export type { IGraphManager };
 
 /**
@@ -94,4 +96,22 @@ export async function createGraphManager(): Promise<GraphManager> {
  */
 export function createTodoManager(graphManager: IGraphManager): TodoManager {
   return new TodoManager(graphManager);
+}
+
+/**
+ * Create a WorkflowPersistenceService instance
+ * Requires an initialized GraphManager to obtain the Neo4j driver
+ *
+ * @example
+ * ```typescript
+ * const graphManager = await createGraphManager();
+ * const workflowService = createWorkflowPersistenceService(graphManager);
+ * const workflow = await workflowService.createWorkflow({
+ *   userId: 'user-123',
+ *   name: 'My Workflow'
+ * });
+ * ```
+ */
+export function createWorkflowPersistenceService(graphManager: IGraphManager): WorkflowPersistenceService {
+  return new WorkflowPersistenceService(graphManager.getDriver());
 }

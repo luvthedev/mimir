@@ -88,3 +88,16 @@ export type {
   IndexFolderResponse,
   ListWatchedFoldersResponse
 } from './watchConfig.types.js';
+
+// Workflow types
+export type {
+  WorkflowNodeType,
+  WorkflowNodePosition,
+  WorkflowNode,
+  WorkflowConnection,
+  Workflow,
+  CreateWorkflowInput,
+  UpdateWorkflowInput,
+  CreateWorkflowNodeInput,
+  CreateWorkflowConnectionInput
+} from './workflow.js';

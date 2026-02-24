@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "summary": "Defined workflow schema and persistence layer for visual editor state. Created TypeScript interfaces (Workflow, WorkflowNode, WorkflowConnection, and input/query types) in src/types/workflow.ts. Extended the graph type system with workflow/workflow_node/workflow_connection node types and has_node/connects_to edge types. Implemented WorkflowPersistenceService with full CRUD operations (createWorkflow, getWorkflowById, listWorkflows, updateWorkflow, deleteWorkflow) using transactional Neo4j queries. Added composite indexes for query performance. All 35 tests pass.",
+  "files_changed": [
+    "src/types/workflow.ts",
+    "src/types/graph.types.ts",
+    "src/types/index.ts",
+    "src/managers/WorkflowPersistenceService.ts",
+    "src/managers/GraphManager.ts",
+    "src/managers/index.ts",
+    "testing/workflow-persistence.test.ts"
+  ]
+}

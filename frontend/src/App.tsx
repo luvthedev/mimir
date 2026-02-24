@@ -3,6 +3,7 @@ import { Portal } from './pages/Portal';
 import { Studio } from './pages/Studio';
 import { Login } from './pages/Login';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { WorkflowEditor } from './components/workflow/WorkflowEditor';
 
 function App() {
   return (
@@ -27,7 +28,14 @@ function App() {
             <Studio />
           </ProtectedRoute>
         } />
-        
+
+        {/* Workflow visual editor - protected */}
+        <Route path="/workflow" element={
+          <ProtectedRoute>
+            <WorkflowEditor />
+          </ProtectedRoute>
+        } />
+
         {/* Catch-all redirect to portal */}
         <Route path="*" element={<Navigate to="/portal" replace />} />
       </Routes>

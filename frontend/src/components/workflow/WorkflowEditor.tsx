@@ -13,14 +13,16 @@
 
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, CheckCircle, Trash2, ArrowLeft, Download } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Trash2, ArrowLeft, Download, Layers, GripVertical } from 'lucide-react';
 import { useWorkflowEditor } from '../../hooks/useWorkflowEditor';
 import { NodePalette } from './NodePalette';
 import { Canvas } from './Canvas';
 import { ExportDialog } from './ExportDialog';
+import { TemplateGallery } from './TemplateGallery';
 import { isValidConnection } from '../../utils/workflowValidation';
 import { NODE_TYPE_CATALOG } from '../../types/workflow';
 import type { EditorNode } from '../../types/workflow';
+import type { WorkflowTemplate } from '../../types/workflowTemplates';
 
 // ---- Node Config Panel (right sidebar when a node is selected) ----
 
@@ -195,9 +197,12 @@ function NodeConfigPanel({
 
 // ---- Main WorkflowEditor ----
 
+type SidebarTab = 'nodes' | 'templates';
+
 export function WorkflowEditor() {
   const navigate = useNavigate();
   const [showExportDialog, setShowExportDialog] = useState(false);
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('nodes');
   const {
     nodes,
     connections,
@@ -219,6 +224,7 @@ export function WorkflowEditor() {
     startConnection,
     cancelConnection,
     clearAll,
+    loadTemplate,
   } = useWorkflowEditor();
 
   // Wrap tryAddConnection for the Canvas to use for real-time validation preview
@@ -250,6 +256,14 @@ export function WorkflowEditor() {
   const handleBackToPortal = useCallback(() => {
     navigate('/portal');
   }, [navigate]);
+
+  const handleSelectTemplate = useCallback(
+    (template: WorkflowTemplate) => {
+      loadTemplate(template);
+      setSidebarTab('nodes');
+    },
+    [loadTemplate],
+  );
 
   return (
     <div className="h-screen flex flex-col bg-norse-night">
@@ -327,9 +341,44 @@ export function WorkflowEditor() {
 
       {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left sidebar - Node Palette */}
-        <aside className="w-64 bg-norse-shadow border-r border-norse-rune overflow-y-auto scroll-container flex-shrink-0">
-          <NodePalette />
+        {/* Left sidebar - Tabbed: Node Palette / Templates */}
+        <aside className="w-64 bg-norse-shadow border-r border-norse-rune flex flex-col flex-shrink-0">
+          {/* Sidebar tab buttons */}
+          <div className="flex border-b border-norse-rune flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => setSidebarTab('nodes')}
+              className={`flex-1 flex items-center justify-center space-x-1.5 px-3 py-2.5 text-xs font-medium transition-colors ${
+                sidebarTab === 'nodes'
+                  ? 'text-valhalla-gold border-b-2 border-valhalla-gold bg-norse-shadow'
+                  : 'text-gray-500 hover:text-gray-300 hover:bg-norse-stone'
+              }`}
+            >
+              <GripVertical size={12} />
+              <span>Nodes</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setSidebarTab('templates')}
+              className={`flex-1 flex items-center justify-center space-x-1.5 px-3 py-2.5 text-xs font-medium transition-colors ${
+                sidebarTab === 'templates'
+                  ? 'text-valhalla-gold border-b-2 border-valhalla-gold bg-norse-shadow'
+                  : 'text-gray-500 hover:text-gray-300 hover:bg-norse-stone'
+              }`}
+            >
+              <Layers size={12} />
+              <span>Templates</span>
+            </button>
+          </div>
+
+          {/* Tab content */}
+          <div className="flex-1 overflow-y-auto scroll-container">
+            {sidebarTab === 'nodes' ? (
+              <NodePalette />
+            ) : (
+              <TemplateGallery onSelectTemplate={handleSelectTemplate} />
+            )}
+          </div>
         </aside>
 
         {/* Center - Canvas */}

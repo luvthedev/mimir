@@ -139,3 +139,15 @@ code {
 .react-flow__minimap {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
+
+/* Workflow Editor - Connection delete button hover */
+.connection-line:hover .connection-delete-circle,
+.connection-line:hover .connection-delete-text {
+  opacity: 1 !important;
+  transition: opacity 0.15s ease-in;
+}
+
+.connection-delete-circle,
+.connection-delete-text {
+  transition: opacity 0.15s ease-out;
+}

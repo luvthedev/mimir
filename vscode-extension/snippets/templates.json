@@ -1,0 +1,65 @@
+{
+  "Invoice Template": {
+    "prefix": "invoice",
+    "body": [
+      "INVOICE",
+      "",
+      "From: ${1:companyName}",
+      "To: ${2:clientName}",
+      "Date: ${3:invoiceDate}",
+      "Invoice #: ${4:invoiceNumber}",
+      "Due Date: ${5:dueDate}",
+      "",
+      "Description: ${6:description}",
+      "",
+      "Amount: \\$${7:amount}",
+      "Tax Rate: ${8:0}%",
+      "Total: \\$${9:totalAmount}",
+      "",
+      "Payment Terms: ${10|Net 15,Net 30,Net 60,Due on Receipt|}",
+      "",
+      "Notes: ${11:notes}"
+    ],
+    "description": "Insert a standard invoice template for billing clients"
+  },
+  "PDF Conversion Template": {
+    "prefix": "pdf-convert",
+    "body": [
+      "PDF Conversion Request",
+      "",
+      "Source Document: ${1:sourceFile}",
+      "Output Format: PDF",
+      "Page Size: ${2|A4,Letter,Legal,A3|}",
+      "Orientation: ${3|portrait,landscape|}",
+      "Margins: ${4:1in}",
+      "",
+      "Header: ${5:headerText}",
+      "Footer: ${6:footerText}",
+      "",
+      "Include Table of Contents: ${7|false,true|}",
+      "Page Numbers: ${8|true,false|}"
+    ],
+    "description": "Insert a PDF conversion template with configurable options"
+  },
+  "Contract Summary Template": {
+    "prefix": "contract-summary",
+    "body": [
+      "CONTRACT SUMMARY",
+      "",
+      "Contract Title: ${1:contractTitle}",
+      "Parties: ${2:partyA} and ${3:partyB}",
+      "Effective Date: ${4:effectiveDate}",
+      "Expiration Date: ${5:expirationDate}",
+      "",
+      "Summary Type: ${6|comprehensive,brief,executive,legal-review|}",
+      "Max Length: ${7:500} words",
+      "",
+      "Key Focus Areas: ${8:all}",
+      "",
+      "Include Obligations: ${9|true,false|}",
+      "Include Financial Terms: ${10|true,false|}",
+      "Include Termination Clauses: ${11|true,false|}"
+    ],
+    "description": "Insert a contract summarization template for legal documents"
+  }
+}

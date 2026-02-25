@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "summary": "Implemented TemplateService with full template discovery, validation, caching, and parameter resolution. Created IDocumentTemplate interface and related types, a JSON Schema for template validation, a validator module with structural/semantic checks, a parameterizer module that substitutes placeholders and validates against constraints, and sample templates for all three categories (invoice, pdf-conversion, contract-summarization). The service is exported as a singleton from src/services/index.ts.",
+  "files_changed": [
+    "templates/schema.json",
+    "templates/invoice-standard.json",
+    "templates/pdf-conversion-basic.json",
+    "templates/contract-summarization-standard.json",
+    "src/types/template.types.ts",
+    "src/types/index.ts",
+    "src/templates/validator.ts",
+    "src/templates/parameterizer.ts",
+    "src/services/template.service.ts",
+    "src/services/index.ts"
+  ]
+}

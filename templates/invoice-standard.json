@@ -1,0 +1,116 @@
+{
+  "id": "invoice-standard",
+  "name": "Standard Invoice",
+  "description": "A standard invoice template for billing clients with itemized line items",
+  "category": "invoice",
+  "version": "1.0.0",
+  "content": "INVOICE\n\nFrom: {{companyName}}\nTo: {{clientName}}\nDate: {{invoiceDate}}\nInvoice #: {{invoiceNumber}}\nDue Date: {{dueDate}}\n\nDescription: {{description}}\n\nAmount: ${{amount}}\nTax Rate: {{taxRate}}%\nTotal: ${{totalAmount}}\n\nPayment Terms: {{paymentTerms}}\n\nNotes: {{notes}}",
+  "parameters": [
+    {
+      "name": "companyName",
+      "type": "string",
+      "description": "Name of the issuing company",
+      "required": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    {
+      "name": "clientName",
+      "type": "string",
+      "description": "Name of the client being billed",
+      "required": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    {
+      "name": "invoiceDate",
+      "type": "date",
+      "description": "Date the invoice was issued",
+      "required": true
+    },
+    {
+      "name": "invoiceNumber",
+      "type": "string",
+      "description": "Unique invoice identifier",
+      "required": true,
+      "constraints": {
+        "pattern": "^INV-[0-9]+$"
+      }
+    },
+    {
+      "name": "dueDate",
+      "type": "date",
+      "description": "Payment due date",
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "Description of services or goods",
+      "required": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    {
+      "name": "amount",
+      "type": "number",
+      "description": "Subtotal amount before tax",
+      "required": true,
+      "constraints": {
+        "min": 0
+      }
+    },
+    {
+      "name": "taxRate",
+      "type": "number",
+      "description": "Tax rate percentage",
+      "required": false,
+      "default": 0,
+      "constraints": {
+        "min": 0,
+        "max": 100
+      }
+    },
+    {
+      "name": "totalAmount",
+      "type": "number",
+      "description": "Total amount including tax",
+      "required": true,
+      "constraints": {
+        "min": 0
+      }
+    },
+    {
+      "name": "paymentTerms",
+      "type": "enum",
+      "description": "Payment terms",
+      "required": false,
+      "default": "Net 30",
+      "constraints": {
+        "enum": ["Net 15", "Net 30", "Net 60", "Due on Receipt"]
+      }
+    },
+    {
+      "name": "notes",
+      "type": "string",
+      "description": "Additional notes",
+      "required": false,
+      "default": "",
+      "constraints": {
+        "maxLength": 500
+      }
+    }
+  ],
+  "metadata": {
+    "author": "system",
+    "tags": ["billing", "finance", "standard"],
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-01-01T00:00:00Z"
+  }
+}

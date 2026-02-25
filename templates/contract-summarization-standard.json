@@ -1,0 +1,110 @@
+{
+  "id": "contract-summarization-standard",
+  "name": "Standard Contract Summarization",
+  "description": "Template for generating structured summaries of legal contracts",
+  "category": "contract-summarization",
+  "version": "1.0.0",
+  "content": "CONTRACT SUMMARY\n\nContract Title: {{contractTitle}}\nParties: {{partyA}} and {{partyB}}\nEffective Date: {{effectiveDate}}\nExpiration Date: {{expirationDate}}\n\nSummary Type: {{summaryType}}\nMax Length: {{maxLength}} words\n\nKey Focus Areas: {{focusAreas}}\n\nInclude Obligations: {{includeObligations}}\nInclude Financial Terms: {{includeFinancialTerms}}\nInclude Termination Clauses: {{includeTermination}}",
+  "parameters": [
+    {
+      "name": "contractTitle",
+      "type": "string",
+      "description": "Title of the contract being summarized",
+      "required": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 300
+      }
+    },
+    {
+      "name": "partyA",
+      "type": "string",
+      "description": "First party in the contract",
+      "required": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    {
+      "name": "partyB",
+      "type": "string",
+      "description": "Second party in the contract",
+      "required": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    {
+      "name": "effectiveDate",
+      "type": "date",
+      "description": "Contract effective date",
+      "required": true
+    },
+    {
+      "name": "expirationDate",
+      "type": "date",
+      "description": "Contract expiration date",
+      "required": false
+    },
+    {
+      "name": "summaryType",
+      "type": "enum",
+      "description": "Type of summary to generate",
+      "required": false,
+      "default": "comprehensive",
+      "constraints": {
+        "enum": ["brief", "comprehensive", "executive", "legal-review"]
+      }
+    },
+    {
+      "name": "maxLength",
+      "type": "number",
+      "description": "Maximum summary length in words",
+      "required": false,
+      "default": 500,
+      "constraints": {
+        "min": 50,
+        "max": 5000
+      }
+    },
+    {
+      "name": "focusAreas",
+      "type": "string",
+      "description": "Comma-separated list of areas to focus on",
+      "required": false,
+      "default": "all",
+      "constraints": {
+        "maxLength": 500
+      }
+    },
+    {
+      "name": "includeObligations",
+      "type": "boolean",
+      "description": "Whether to include party obligations in summary",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "includeFinancialTerms",
+      "type": "boolean",
+      "description": "Whether to include financial terms in summary",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "includeTermination",
+      "type": "boolean",
+      "description": "Whether to include termination clauses in summary",
+      "required": false,
+      "default": true
+    }
+  ],
+  "metadata": {
+    "author": "system",
+    "tags": ["legal", "contract", "summarization"],
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-01-01T00:00:00Z"
+  }
+}

@@ -88,3 +88,16 @@ export type {
   IndexFolderResponse,
   ListWatchedFoldersResponse
 } from './watchConfig.types.js';
+
+// Template types
+export type {
+  TemplateCategory,
+  TemplateParameterType,
+  ParameterConstraints,
+  ITemplateParameter,
+  ITemplateMetadata,
+  IDocumentTemplate,
+  IParameterizedTemplate,
+  ITemplateValidationResult,
+  IParameterValidationResult
+} from './template.types.js';

@@ -25,7 +25,11 @@
     "onCommand:mimir.openIntelligence",
     "onCommand:mimir.openNodeManager",
     "onCommand:mimir.openStudio",
-    "onCommand:mimir.createWorkflow"
+    "onCommand:mimir.createWorkflow",
+    "onCommand:mimir.insertInvoiceTemplate",
+    "onCommand:mimir.insertPdfTemplate",
+    "onCommand:mimir.insertContractTemplate",
+    "onCommand:mimir.insertTemplate"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -77,6 +81,26 @@
         "command": "mimir.createWorkflow",
         "title": "Mimir: Create New Workflow",
         "icon": "$(add)"
+      },
+      {
+        "command": "mimir.insertInvoiceTemplate",
+        "title": "Mimir: Insert Invoice Extraction Template",
+        "category": "Mimir"
+      },
+      {
+        "command": "mimir.insertPdfTemplate",
+        "title": "Mimir: Insert PDF Conversion Template",
+        "category": "Mimir"
+      },
+      {
+        "command": "mimir.insertContractTemplate",
+        "title": "Mimir: Insert Contract Summarization Template",
+        "category": "Mimir"
+      },
+      {
+        "command": "mimir.insertTemplate",
+        "title": "Mimir: Insert Template...",
+        "category": "Mimir"
       }
     ],
     "customEditors": [
@@ -201,9 +225,30 @@
         {
           "command": "mimir.createWorkflow",
           "when": "true"
+        },
+        {
+          "command": "mimir.insertInvoiceTemplate",
+          "when": "editorIsOpen"
+        },
+        {
+          "command": "mimir.insertPdfTemplate",
+          "when": "editorIsOpen"
+        },
+        {
+          "command": "mimir.insertContractTemplate",
+          "when": "editorIsOpen"
+        },
+        {
+          "command": "mimir.insertTemplate",
+          "when": "editorIsOpen"
         }
       ]
-    }
+    },
+    "snippets": [
+      {
+        "path": "./snippets/templates.json"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run build",

@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "summary": "Added template discovery and insertion to the VSCode extension. Created TemplateCommandHandler for loading templates from disk and inserting content at cursor, TemplateQuickPickProvider for browsing templates with descriptions and parameter counts, and VSCode snippets with trigger keywords (invoice, pdf-convert, contract-summary). Registered three insert commands (mimir.insertInvoiceTemplate, mimir.insertPdfTemplate, mimir.insertContractTemplate) and a browse command (mimir.browseTemplates) in the command palette with 'Mimir: Insert' prefix. Updated package.json with command entries, activation events, menu visibility, and snippet contributions.",
+  "files_changed": [
+    "vscode-extension/src/commands/template-commands.ts",
+    "vscode-extension/src/providers/template-provider.ts",
+    "vscode-extension/snippets/templates.json",
+    "vscode-extension/src/extension.ts",
+    "vscode-extension/package.json"
+  ]
+}

@@ -5,6 +5,8 @@ import { PortalPanel } from './portalPanel';
 import { IntelligencePanel } from './intelligencePanel';
 import { NodeManagerPanel } from './nodeManagerPanel';
 import { AuthManager } from './authManager';
+import { TemplateCommandHandler } from './commands/template-commands';
+import { TemplateQuickPickProvider } from './providers/template-provider';
 import type { ChatMessage, MimirConfig, ToolParameters } from './types';
 
 let preambleManager: PreambleManager;
@@ -283,6 +285,20 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage('Drag agents to the canvas to create your workflow');
     })
   );
+
+  // ========================================
+  // TEMPLATES: Register template insertion commands
+  // ========================================
+  const templateHandler = new TemplateCommandHandler();
+  const templateProvider = new TemplateQuickPickProvider(templateHandler);
+
+  // Register individual template insertion commands
+  for (const disposable of templateHandler.registerCommands()) {
+    context.subscriptions.push(disposable);
+  }
+
+  // Register template browser (quick pick) command
+  context.subscriptions.push(templateProvider.registerCommand());
 
   // Register webview panel serializers for state restoration
   vscode.window.registerWebviewPanelSerializer('mimirPortal', {

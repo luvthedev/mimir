@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mimir.dev/schemas/document-template.json",
+  "title": "Document Template",
+  "description": "Schema for validating Mimir document templates",
+  "type": "object",
+  "required": ["id", "metadata", "content", "parameters"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "description": "Unique template identifier using kebab-case"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["id", "name", "description", "category", "version", "createdAt", "updatedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Must match the top-level id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Human-readable template name"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "Detailed description of the template"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["invoice", "pdf-conversion", "contract-summarization"],
+          "description": "Template category for filtering"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version string"
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Template author"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "uniqueItems": true,
+          "description": "Tags for additional categorization"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 last update timestamp"
+        }
+      }
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Template content with {{parameterName}} placeholders"
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "label", "description", "type", "required"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+            "description": "Parameter name used as placeholder key"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Human-readable label"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000,
+            "description": "Description of the parameter"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "date", "boolean", "enum"],
+            "description": "Data type of the parameter"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether this parameter must be provided"
+          },
+          "defaultValue": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" }
+            ],
+            "description": "Default value if not provided"
+          },
+          "constraints": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "min": {
+                "type": "number",
+                "description": "Minimum length for strings or minimum value for numbers"
+              },
+              "max": {
+                "type": "number",
+                "description": "Maximum length for strings or maximum value for numbers"
+              },
+              "pattern": {
+                "type": "string",
+                "description": "Regular expression pattern for string validation"
+              },
+              "allowedValues": {
+                "type": "array",
+                "items": { "type": "string" },
+                "uniqueItems": true,
+                "description": "Allowed values for enum parameters"
+              },
+              "dateFormat": {
+                "type": "string",
+                "description": "Expected date format string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

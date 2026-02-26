@@ -1,0 +1,91 @@
+{
+  "id": "contract-summarization-standard",
+  "metadata": {
+    "id": "contract-summarization-standard",
+    "name": "Standard Contract Summarization",
+    "description": "Template for summarizing contracts, extracting key terms, obligations, and important dates.",
+    "category": "contract-summarization",
+    "version": "1.0.0",
+    "author": "Mimir",
+    "tags": ["contract", "summarization", "legal"],
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  "content": "CONTRACT SUMMARY\n\nContract Title: {{contractTitle}}\nParties: {{partyA}} and {{partyB}}\nEffective Date: {{effectiveDate}}\nExpiration Date: {{expirationDate}}\n\nSummary Type: {{summaryType}}\nFocus Areas: {{focusAreas}}\n\nContract Text:\n{{contractText}}\n\nAdditional Instructions: {{additionalInstructions}}",
+  "parameters": [
+    {
+      "name": "contractTitle",
+      "label": "Contract Title",
+      "description": "Title or name of the contract",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1, "max": 500 }
+    },
+    {
+      "name": "partyA",
+      "label": "Party A",
+      "description": "First party to the contract",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1, "max": 300 }
+    },
+    {
+      "name": "partyB",
+      "label": "Party B",
+      "description": "Second party to the contract",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1, "max": 300 }
+    },
+    {
+      "name": "effectiveDate",
+      "label": "Effective Date",
+      "description": "Date the contract goes into effect",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "expirationDate",
+      "label": "Expiration Date",
+      "description": "Date the contract expires",
+      "type": "date",
+      "required": false,
+      "defaultValue": "N/A"
+    },
+    {
+      "name": "summaryType",
+      "label": "Summary Type",
+      "description": "Type of summary to generate",
+      "type": "enum",
+      "required": false,
+      "defaultValue": "comprehensive",
+      "constraints": { "allowedValues": ["brief", "comprehensive", "executive", "legal-review"] }
+    },
+    {
+      "name": "focusAreas",
+      "label": "Focus Areas",
+      "description": "Specific areas to focus the summary on (comma-separated)",
+      "type": "string",
+      "required": false,
+      "defaultValue": "obligations, key terms, deadlines, payment terms",
+      "constraints": { "max": 1000 }
+    },
+    {
+      "name": "contractText",
+      "label": "Contract Text",
+      "description": "The full contract text to summarize",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1 }
+    },
+    {
+      "name": "additionalInstructions",
+      "label": "Additional Instructions",
+      "description": "Any additional instructions for the summarization",
+      "type": "string",
+      "required": false,
+      "defaultValue": "",
+      "constraints": { "max": 2000 }
+    }
+  ]
+}

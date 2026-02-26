@@ -1,0 +1,98 @@
+{
+  "id": "invoice-standard",
+  "metadata": {
+    "id": "invoice-standard",
+    "name": "Standard Invoice",
+    "description": "A standard invoice template for billing clients with line items, tax, and payment terms.",
+    "category": "invoice",
+    "version": "1.0.0",
+    "author": "Mimir",
+    "tags": ["billing", "finance", "standard"],
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  "content": "INVOICE\n\nFrom: {{companyName}}\nTo: {{clientName}}\nInvoice Number: {{invoiceNumber}}\nDate: {{invoiceDate}}\nDue Date: {{dueDate}}\n\nDescription: {{description}}\nAmount: ${{amount}}\nTax Rate: {{taxRate}}%\n\nPayment Terms: {{paymentTerms}}\n\nNotes: {{notes}}",
+  "parameters": [
+    {
+      "name": "companyName",
+      "label": "Company Name",
+      "description": "Name of the issuing company",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1, "max": 200 }
+    },
+    {
+      "name": "clientName",
+      "label": "Client Name",
+      "description": "Name of the client being billed",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1, "max": 200 }
+    },
+    {
+      "name": "invoiceNumber",
+      "label": "Invoice Number",
+      "description": "Unique invoice identifier",
+      "type": "string",
+      "required": true,
+      "constraints": { "pattern": "^INV-\\d{4,}$" }
+    },
+    {
+      "name": "invoiceDate",
+      "label": "Invoice Date",
+      "description": "Date the invoice was issued",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "dueDate",
+      "label": "Due Date",
+      "description": "Payment due date",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "description",
+      "label": "Description",
+      "description": "Description of goods or services",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1, "max": 2000 }
+    },
+    {
+      "name": "amount",
+      "label": "Amount",
+      "description": "Total invoice amount before tax",
+      "type": "number",
+      "required": true,
+      "constraints": { "min": 0 }
+    },
+    {
+      "name": "taxRate",
+      "label": "Tax Rate",
+      "description": "Tax rate as a percentage",
+      "type": "number",
+      "required": false,
+      "defaultValue": 0,
+      "constraints": { "min": 0, "max": 100 }
+    },
+    {
+      "name": "paymentTerms",
+      "label": "Payment Terms",
+      "description": "Payment terms for the invoice",
+      "type": "enum",
+      "required": false,
+      "defaultValue": "Net 30",
+      "constraints": { "allowedValues": ["Due on Receipt", "Net 15", "Net 30", "Net 60", "Net 90"] }
+    },
+    {
+      "name": "notes",
+      "label": "Notes",
+      "description": "Additional notes for the invoice",
+      "type": "string",
+      "required": false,
+      "defaultValue": "",
+      "constraints": { "max": 1000 }
+    }
+  ]
+}

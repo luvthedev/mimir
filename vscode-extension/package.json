@@ -25,7 +25,11 @@
     "onCommand:mimir.openIntelligence",
     "onCommand:mimir.openNodeManager",
     "onCommand:mimir.openStudio",
-    "onCommand:mimir.createWorkflow"
+    "onCommand:mimir.createWorkflow",
+    "onCommand:mimir.insertInvoiceTemplate",
+    "onCommand:mimir.insertPdfTemplate",
+    "onCommand:mimir.insertContractTemplate",
+    "onCommand:mimir.browseTemplates"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -77,6 +81,30 @@
         "command": "mimir.createWorkflow",
         "title": "Mimir: Create New Workflow",
         "icon": "$(add)"
+      },
+      {
+        "command": "mimir.insertInvoiceTemplate",
+        "title": "Mimir: Insert Invoice Extraction Template",
+        "category": "Mimir",
+        "icon": "$(file-text)"
+      },
+      {
+        "command": "mimir.insertPdfTemplate",
+        "title": "Mimir: Insert PDF Conversion Template",
+        "category": "Mimir",
+        "icon": "$(file-pdf)"
+      },
+      {
+        "command": "mimir.insertContractTemplate",
+        "title": "Mimir: Insert Contract Summarization Template",
+        "category": "Mimir",
+        "icon": "$(law)"
+      },
+      {
+        "command": "mimir.browseTemplates",
+        "title": "Mimir: Browse Templates",
+        "category": "Mimir",
+        "icon": "$(library)"
       }
     ],
     "customEditors": [
@@ -201,9 +229,30 @@
         {
           "command": "mimir.createWorkflow",
           "when": "true"
+        },
+        {
+          "command": "mimir.insertInvoiceTemplate",
+          "when": "true"
+        },
+        {
+          "command": "mimir.insertPdfTemplate",
+          "when": "true"
+        },
+        {
+          "command": "mimir.insertContractTemplate",
+          "when": "true"
+        },
+        {
+          "command": "mimir.browseTemplates",
+          "when": "true"
         }
       ]
-    }
+    },
+    "snippets": [
+      {
+        "path": "./snippets/templates.json"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run build",

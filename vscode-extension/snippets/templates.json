@@ -1,0 +1,66 @@
+{
+  "Invoice Extraction Template": {
+    "prefix": "invoice",
+    "body": [
+      "INVOICE",
+      "",
+      "From: ${1:companyName}",
+      "To: ${2:clientName}",
+      "Invoice Number: ${3:invoiceNumber}",
+      "Date: ${4:invoiceDate}",
+      "Due Date: ${5:dueDate}",
+      "",
+      "Description: ${6:description}",
+      "Amount: \\$${7:amount}",
+      "Tax Rate: ${8:taxRate}%",
+      "",
+      "Payment Terms: ${9:paymentTerms}",
+      "",
+      "Notes: ${10:notes}",
+      "$0"
+    ],
+    "description": "Insert a standard invoice template with parameterized fields"
+  },
+  "PDF Conversion Template": {
+    "prefix": "pdf-convert",
+    "body": [
+      "PDF CONVERSION REQUEST",
+      "",
+      "Document Title: ${1:documentTitle}",
+      "Source Format: ${2|markdown,html,docx,txt,rtf|}",
+      "Page Size: ${3|A4,Letter,Legal,A3|}",
+      "Orientation: ${4|portrait,landscape|}",
+      "",
+      "Header Text: ${5:headerText}",
+      "Footer Text: ${6:footerText}",
+      "",
+      "Include Page Numbers: ${7|true,false|}",
+      "",
+      "Content:",
+      "${8:documentContent}",
+      "$0"
+    ],
+    "description": "Insert a PDF conversion template with page settings and content fields"
+  },
+  "Contract Summarization Template": {
+    "prefix": "contract-summary",
+    "body": [
+      "CONTRACT SUMMARY",
+      "",
+      "Contract Title: ${1:contractTitle}",
+      "Parties: ${2:partyA} and ${3:partyB}",
+      "Effective Date: ${4:effectiveDate}",
+      "Expiration Date: ${5:expirationDate}",
+      "",
+      "Summary Type: ${6|comprehensive,brief,executive,legal-review|}",
+      "Focus Areas: ${7:obligations, key terms, deadlines, payment terms}",
+      "",
+      "Contract Text:",
+      "${8:contractText}",
+      "",
+      "Additional Instructions: ${9:additionalInstructions}",
+      "$0"
+    ],
+    "description": "Insert a contract summarization template for extracting key terms and obligations"
+  }
+}

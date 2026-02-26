@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "summary": "Implemented TemplateService with full template discovery, validation, and parameter resolution. Created IDocumentTemplate types (src/types/template.types.ts), JSON Schema (templates/schema.json), template validator (src/templates/validator.ts), parameter substitution engine (src/templates/parameterizer.ts), and the central TemplateService class (src/services/template.service.ts) with caching via Map<string, IDocumentTemplate>. Exported singleton from src/services/index.ts. Added three sample templates covering all categories (invoice, pdf-conversion, contract-summarization). Build compiles cleanly, all 977 existing tests pass.",
+  "files_changed": [
+    "src/types/template.types.ts",
+    "src/types/index.ts",
+    "templates/schema.json",
+    "templates/invoice-standard.json",
+    "templates/pdf-conversion-basic.json",
+    "templates/contract-summarization-standard.json",
+    "src/templates/validator.ts",
+    "src/templates/parameterizer.ts",
+    "src/services/template.service.ts",
+    "src/services/index.ts"
+  ]
+}

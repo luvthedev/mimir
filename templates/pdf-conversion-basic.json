@@ -1,0 +1,85 @@
+{
+  "id": "pdf-conversion-basic",
+  "metadata": {
+    "id": "pdf-conversion-basic",
+    "name": "Basic PDF Conversion",
+    "description": "Template for converting documents to PDF format with configurable page settings and headers.",
+    "category": "pdf-conversion",
+    "version": "1.0.0",
+    "author": "Mimir",
+    "tags": ["pdf", "conversion", "document"],
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  "content": "PDF CONVERSION REQUEST\n\nDocument Title: {{documentTitle}}\nSource Format: {{sourceFormat}}\nPage Size: {{pageSize}}\nOrientation: {{orientation}}\n\nHeader Text: {{headerText}}\nFooter Text: {{footerText}}\n\nInclude Page Numbers: {{includePageNumbers}}\n\nContent:\n{{documentContent}}",
+  "parameters": [
+    {
+      "name": "documentTitle",
+      "label": "Document Title",
+      "description": "Title of the document to convert",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1, "max": 300 }
+    },
+    {
+      "name": "sourceFormat",
+      "label": "Source Format",
+      "description": "Original document format",
+      "type": "enum",
+      "required": true,
+      "constraints": { "allowedValues": ["markdown", "html", "docx", "txt", "rtf"] }
+    },
+    {
+      "name": "pageSize",
+      "label": "Page Size",
+      "description": "Output PDF page size",
+      "type": "enum",
+      "required": false,
+      "defaultValue": "A4",
+      "constraints": { "allowedValues": ["A4", "Letter", "Legal", "A3"] }
+    },
+    {
+      "name": "orientation",
+      "label": "Orientation",
+      "description": "Page orientation",
+      "type": "enum",
+      "required": false,
+      "defaultValue": "portrait",
+      "constraints": { "allowedValues": ["portrait", "landscape"] }
+    },
+    {
+      "name": "headerText",
+      "label": "Header Text",
+      "description": "Text to display in the page header",
+      "type": "string",
+      "required": false,
+      "defaultValue": "",
+      "constraints": { "max": 200 }
+    },
+    {
+      "name": "footerText",
+      "label": "Footer Text",
+      "description": "Text to display in the page footer",
+      "type": "string",
+      "required": false,
+      "defaultValue": "",
+      "constraints": { "max": 200 }
+    },
+    {
+      "name": "includePageNumbers",
+      "label": "Include Page Numbers",
+      "description": "Whether to include page numbers in the footer",
+      "type": "boolean",
+      "required": false,
+      "defaultValue": true
+    },
+    {
+      "name": "documentContent",
+      "label": "Document Content",
+      "description": "The content to convert to PDF",
+      "type": "string",
+      "required": true,
+      "constraints": { "min": 1 }
+    }
+  ]
+}
